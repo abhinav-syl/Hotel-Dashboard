@@ -1,0 +1,81 @@
+body {
+    font-family: Arial;
+    padding: 10px;
+    background: #f1f1f1;
+  }
+
+  .header {
+    padding: 10px;
+    text-align: center;
+    background: white;
+  }
+
+  .left-nav {   
+    float: left;
+    height: 100%;
+    width: 10%;
+    padding:5px;
+  }
+
+  .middle { 
+    display:table;  
+    float: left;
+    width: 50%;
+    height:70%;
+    padding: 5px;
+  }
+
+  .right-nav {
+      float: left;
+      width: 40%;
+      height:100%;
+      padding:5px;
+      margin-left:0px;
+  }
+
+  .card {
+    background-color: white;
+    padding: 20px;
+    margin-top: 20px;
+  }
+
+  .middle-1{
+      width:100%;
+      display:block;
+      position: relative;
+      height: 70%;
+      padding: 5px;
+      margin-bottom: 10px;
+      margin-top: 10px;
+  }
+
+  #pricePlot{
+    height:100%;
+  }
+
+  #pieChart{
+    height:100%;
+  }
+
+  div.card-block{
+      position:relative;
+      width:21%;
+      float:left;
+      background-color: white;
+      padding: 10px;
+      overflow: hidden;
+      margin-top: 20px;
+      margin-right: 10px;
+  }
+
+  .row {
+    display: table;
+    width:100%;
+    margin-top: 10px;
+  }
+
+  .content{
+      width:85%;
+      float:left;
+      padding:5px;
+  }

@@ -1,0 +1,174 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="s.css">
+    </head>
+    <body>
+        <div class="header">
+            <h1>Hello User!</h1>
+        </div>
+        <div class="topnav">
+            <a href="">Home</a>
+            <a href="">About</a>
+            <a href="#" style="float:right">Help</a>
+        </div>
+        <div class="main-body">
+            <div class="left-nav">
+                <div class="card">
+                        <a href="">Previous Reservations</a></br>
+                        <a href="">Previous Reservations</a><br>
+                        <p id="UserName"></p>
+                </div>
+            </div>
+            <div class="middle">
+                <div class="card">
+                <h2>Clickup on Image to select Product</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras dignissim laoreet erat. Suspendisse potenti. In pharetra tristique magna, non auctor magna tincidunt sit amet. Cras nec odio at mauris porta cursus. Mauris finibus quis nisl at sodales. Aliquam augue lacus, lacinia sit amet est et, porta dignissim metus. Praesent nibh risus, placerat eu accumsan quis, porttitor eget eros. Vestibulum aliquet quam ac consequat gravida.</p>
+                </div>
+                <div class="row">
+                    <div class="polaroid" name='Single Bed'>
+                        <div class="container">
+                            <img src="images/single.jpeg" alt="Snow" style="width:100%">
+                            <p>Single Bed</p>
+                        </div>
+                        <div class="cart">
+                            <button class="selection" onclick="added(this.parentElement)" >+</button>
+                        </div>
+                    </div>
+                    <div class="polaroid" name='Double Bed'>
+                        <div class="container">
+                            <img src="images/double.jpeg" alt="Mountains" style="width:100%">
+                            <p>Double Bed</p>
+                        </div>
+                        <div class="cart">
+                            <button class="selection" onclick="added(this.parentElement)" >+</button>
+                        </div>
+                    </div>
+                    <div class="polaroid" name='Triple Bed'>
+                        <div class="container">
+                            <img src="images/multiple.jpeg" alt="Mountains" style="width:100%">
+                            <p>Triple Bed</p>
+                        </div>
+                        <div class="cart">
+                            <button class="selection" onclick="added(this.parentElement)" >+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right-nav">
+                <div class="card">
+                    <form onsubmit="return false">
+                        <label for="checkin">Checkin Date</label><br>
+                        <input type="date" name="checkin"><br><br>
+                        <label for="checkout">Checkout Date</label><br>
+                        <input type="date" name="checkout"><br><br>
+                        <label for="checkout">Number of heads</label><br><br>
+                        <input type="range" name="heads" min="0" max="5" oninput="updateAmount(this)"><br>
+                        <button class="submit" onclick="PutData()">Submit</button>
+                        <p id="type">Double Bed</p>
+                    </form>
+                <p id="heads">5</p>
+                </div>
+
+                <div class="card">
+                    <div class="details">Booking Details</p>
+                        <p id="price">Price : </p>
+                        <p id="num_people">Number of People : 0</p>
+                </div>
+            </div>
+        </div>
+        <script>
+            var jlist = []
+            let people = document.createElement('p')
+            people.innerHTML=0
+           function added(element){
+               element = (element.parentElement)
+               let ans = element.getAttribute('name')
+               let type = document.querySelector('#type')
+               type.innerHTML=ans
+               var elem = document.querySelector('#num_people')
+               console.log('elm = ', elem)
+               console.log('people = ',people)
+               elem.innerHTML = "Number of People : " + people.innerHTML
+
+           } 
+           function updateAmount(element){
+               console.log(element.value)
+               let num = document.querySelector('#heads')
+               console.log(num)
+               num.innerHTML = element.value
+               people = num
+           }
+
+           function PutData(){
+            let user = document.getElementById('UserName').innerHTML
+            let checkin = document.querySelector('input[name="checkin"]').value
+            let checkout = document.querySelector('input[name="checkout"]').value
+            let difference =  new Date(checkout).getTime()- new Date(checkin).getTime()
+            console.log('new = ',new Date(checkout))
+            let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
+            console.log(TotalDays + ' days to world Cup');
+            let heads = document.getElementById('heads').innerHTML
+            let type = document.getElementById('type').innerHTML
+            if (type=="Double Bed"){
+                type = "double"
+            }
+            else if (type=="Triple Bed"){
+                type = "triple"
+            }
+            else {
+                type = "single"
+            }
+            const data = {
+                 name: user,
+                 checkin: checkin,
+                 checkout: checkout,
+                 heads: heads,
+                 type: type,
+                 time: TotalDays,
+                 };
+            console.log(data)
+
+            fetch('http://127.0.0.1:8000/booking/api/book', {
+              method: 'POST', // or 'PUT'
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+              console.log('Success:', data);
+              na = data.totalPrice
+              let price = document.getElementById('price')
+              console.log("price = ", price)
+                console.log("price = ",na)
+                price.innerHTML= "Price : " + na
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+              let price = document.getElementById('price')
+              price.innerHTML= "Booking cannot be done"
+            });
+
+           }
+
+        function GetData(){
+            var na = ''
+            fetch('http://127.0.0.1:8000/booking/api/logged?format=json')
+            .then(response => response.json())
+            .then(data => {
+              console.log('Success:', data[0].name);
+              na = data[0].name
+              let user = document.getElementById('UserName')
+                console.log(na)
+                user.innerHTML=na
+              
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            })
+        }
+        GetData()
+        </script>
+    </body>
+</html>

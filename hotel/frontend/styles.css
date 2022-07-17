@@ -1,0 +1,112 @@
+.polaroid {
+    display: block;
+    float: left;
+    width: 23%;
+    padding: 10px;
+    background-color:white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-bottom: 25px;
+    margin-left: 10px;
+    margin-right: 25px;
+  }
+
+  @media screen and (max-width: 800px) {
+    .polaroid {
+      float: none;
+      width: 100%;
+    }
+  }
+
+  h1{
+    text-align: center;
+  }
+
+  .left-nav{
+    width: 10%;
+    float:left;
+    margin-top: 30px;
+ 
+  }
+
+  .topnav {
+    overflow: hidden;
+    background-color: #333;
+  }
+
+  .right-nav{
+    float: left;
+    width: 10%;
+  }
+
+  img {
+    width: 300px;
+    height: 200px;
+    padding: 20px
+  }
+  div.container {
+    text-align: center;
+    padding: 10px 20px;
+  }
+
+  .row{
+    margin-left: 10%;
+  }
+
+  .topnav a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    background-color: #333;
+  }
+
+  .main-body::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  .row::after {
+    content: "";
+    clear: both;
+    float: center;
+    display: table;
+    padding: 20px
+  }
+
+  .main::after {
+    content: "";
+    clear: both;
+    float: center;
+    display: table;
+    padding: 20px
+  }
+
+  .topnav a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+
+  .main-body{
+    width: 80%;
+    margin-top: 20px;
+    padding: 10px;
+ }
+
+ .polaroid:hover{
+    background-color: #606;
+ }
+
+ @media screen and (max-width: 1000px) {
+    .left-nav {
+      float: none;
+      width: 100%;
+    }
+  }
+
+a {
+  word-wrap: break-word;
+}

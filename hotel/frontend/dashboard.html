@@ -1,0 +1,219 @@
+<html>
+    <head>
+        <script src='https://cdn.plot.ly/plotly-2.12.1.min.js'></script>
+        <link rel="stylesheet" href="dash.css">
+    </head>
+    <body>
+        <div class="header">
+            <h1>Dashboard</h1>
+        </div>
+        <div class="left-nav">
+            <div class="card">
+                <p>leftnav</p>
+            </div>
+        </div>
+        <div class="content">
+            <div class="topnav">
+                <div class="row">
+                    <div class="card-block">
+                        <p>No. of users</p>
+                        <p id="numUsers">rlist[0]</p>
+                    </div>
+                    <div class="card-block">
+                        <p>Total Bookings</p>
+                        <p id="numBookings"></p>
+                    </div>
+                    <div class="card-block">
+                        <p>Rooms Available</p>
+                        <p id="roomAvail"></p>
+                    </div>
+                    <div class="card-block">
+                        <p>Rooms Booked</p>
+                        <p id="roomNotAvail"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="middle">
+                <div class="middle-1">
+                    <div class="card" id="pricePlot">
+                        <p>middle1</p>
+                    </div>
+                </div>
+            </div>
+            <div class="right-nav">
+                <div class="card" style="height:50%">
+                    <p id = 'pieChart'>rightnav</p>
+                </div>
+            </div>
+        </div>
+        <button onclick="looping()">Loop</button>
+        <button onclick="setValue(blist, 'numBookings')">NumUser</button>
+        <button onclick="Plotting(incDict, 'bar', 'pricePlot')">Plot</button>
+        <button onclick="PiePlotting(sDict, 'pie', 'pieChart')">pie</button>
+        <script>
+            var data1 = [
+              {
+                x: ['giraffes', 'orangutans', 'monkeys'],
+                y: [20, 14, 23],
+                type: 'bar'
+              }
+            ];
+          
+            //Plotly.newPlot('myDiv', data);
+            var data2 = [{
+              values: [19, 26, 55],
+              labels: ['Residential', 'Non-Residential', 'Utility'],
+              type: 'pie'
+            }];
+
+            var layout = {
+              height: 400,
+              width: 500
+            };
+            //Plotly.newPlot('myDiv', data, layout);
+            var blist = []
+            var rlist = []
+            var ulist = []
+            var incDict = {}
+            var sDict = {}
+            function GetData(url, jlist){
+            var na = ''
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+              console.log('Success:', data);
+              let datas = data
+              for (var i=0; i<data.length; i++){
+                jlist[i] = data[i]
+              }
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            })
+            }
+
+            function GetDict(url, jlist, key, value){
+            var na = ''
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+              console.log('Success:', data);
+              let datas = data
+              for (var i=0; i<data.length; i++){
+                jlist[data[i][key]] = data[i][value]
+              }
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            })
+            }
+        
+        function CreateDict(list, sDict){
+            console.log(list)
+            for(i in list){
+                console.log(list[i])
+                if (isNaN(sDict[list[i]['state']])==true){
+                    sDict[list[i]['state']] = 0
+                }
+                sDict[list[i]['state']] = sDict[list[i]['state']] + 1
+            }
+            console.log('sdict = ', sDict)
+        }
+
+        GetData('http://127.0.0.1:8000/booking/api/bookings/2022-07-04/2022-07-17?format=json', blist)
+        GetData('http://127.0.0.1:8000/booking/api/user?format=json', ulist)
+        GetData('http://127.0.0.1:8000/booking/api/room?format=json', rlist)
+        GetDict('http://127.0.0.1:8000/booking/api/accounts?format=json', incDict, 'date', 'income')
+        setTimeout(CreateDict, 100, ulist, sDict)
+        console.log('blist = ', blist)
+        console.log('ulist = ', ulist)
+        console.log('rlist = ', rlist)
+        console.log('incDict = ', incDict)
+        function looping(){
+            for (var i=0;i<blist.length;i++){
+            console.log(blist[i])
+        }
+        }
+        function setValue(list, identity){
+            console.log(identity)
+            let a = document.getElementById(identity)
+            console.log('eenee = ', a.innerHTML)
+            setTimeout(console.log('list = ', list), 100)
+            setTimeout(console.log('list = ', list.length), 100)
+            setTimeout(a.innerHTML = list.length, 100)
+        }
+        setTimeout(setValue, 100, ulist, 'numUsers')
+        setTimeout(setValue, 100, blist, 'numBookings')
+        var aroom = []
+        var broom = []
+        function seperate(){
+            for(var i=0; i<rlist.length; i++){
+                if (rlist[i]['available']==true){
+                    aroom.push(rlist[i])
+                }
+                else{
+                    broom.push(rlist[i])
+                }
+            }
+            console.log('arrom = ',aroom)
+            console.log('brrom = ',broom)
+        }
+        setTimeout(seperate, 100)
+        setTimeout(setValue, 100, aroom, 'roomAvail')
+        setTimeout(setValue, 100, broom, 'roomNotAvail')
+        setTimeout(console.log('blist len = ', blist.length),1000)
+
+        function Plotting(dict, type, identity){
+            console.log('dict =   ',dict)
+            var key = [] 
+            var value = []
+            for(i in dict){
+                console.log('i = ', i)
+                key.push(i)
+                value.push(dict[i])
+            }
+            console.log('key = ', key)
+            console.log('value = ', value)
+            var data1 = [
+              {
+                x: key,
+                y: value,
+                type: type,
+              }
+            ]
+            var layout = {
+              height: 400,
+              width: 500
+            };
+            Plotly.newPlot(identity, data1);
+        }
+
+        function PiePlotting(dict, type, identity){
+            console.log('dict =   ',dict)
+            var key = [] 
+            var value = []
+            for(i in dict){
+                console.log('i = ', i)
+                key.push(i)
+                value.push(dict[i])
+            }
+            console.log('key = ', key)
+            console.log('value = ', value)
+            var data1 = [
+              {
+                values: value,
+                labels: key,
+                type: type,
+              }
+            ]
+            var layout = {
+              height: 400,
+              width: 500
+            };
+            Plotly.newPlot(identity, data1);
+        }
+        setTimeout(Plotting, 200, incDict, 'bar', 'pricePlot')
+        setTimeout(PiePlotting, 200, sDict, 'pie', 'pieChart')
+        </script>
+    </body>
+</html>
