@@ -46,7 +46,6 @@ class BookingApiView(APIView):
         if not rooms:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         room = Room.objects.filter(id=rooms[0].id)
-        room.update(available=False)
         print('room[0] = ',room[0].type)
         price = roomType[0].cost
         time = request.data.get('time')
@@ -67,18 +66,20 @@ class BookingApiView(APIView):
             if not account:
                 acc = {
                     'date': date_temp,
-                    'income': 2500,
+                    'income': price,
                 }
                 serializer = AccountSerializer(data=acc)
                 if serializer.is_valid():
                     serializer.save()
                     print('serizalier account = ', serializer.data)
-                account = Account.objects.filter(date=date_temp)
+            account = Account.objects.filter(date=date_temp)
             account[0].income = account[0].income + price
+            print(account[0].income, ' = ', account[0].income, ' + ' ,price)
             print(account[0].income)
             account.update(income=account[0].income)
             print(date_temp)
             date_temp = date_temp + datetime.timedelta(days=1)
+            room.update(available=False)
         data = {
             'checkout': request.data.get('checkout'), 
             'checkin': request.data.get('checkin'), 
